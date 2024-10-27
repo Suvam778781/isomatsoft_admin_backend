@@ -3,7 +3,14 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { GetConditionalData, UpdateConditionalData } = require('./controllers/controllers');
+
+const Header = require('./models/header.model');
+const HeroSection = require('./models/hero.model');
+const Footer = require('./models/footer.model');
+const Carausel = require('./models/carausels.model');
+const AboutUs = require('./models/aboutus.model');
+const { upload } = require('./middlewares/middlewares');
+const { GetConditionalData, UpdateConditionalData, get_image_link } = require('./controllers/controllers');
 const { connection } = require('./config/db');
 
 // Load environment variables from .env file
@@ -17,10 +24,11 @@ server.use(cors());
 
 // Routes
 server.get('/api/getData', GetConditionalData); // Route to get data by section
-server.post('/api/updateData', UpdateConditionalData); // Route to update data by section
+server.post('/api/updateData', UpdateConditionalData); // Route to update data by section'
+server.post("/api/get-image-url",upload.single('post_img'),get_image_link)
 
 // Start the server
-const PORT = process.env.PORT || 8091;
+const PORT = process.env.PORT || 8081;
 server.listen(PORT, async (error) => {
     if (error) {
       console.log(error);
@@ -36,12 +44,6 @@ server.listen(PORT, async (error) => {
 
 
 
-
-const Header = require('./models/header.model');
-const HeroSection = require('./models/hero.model');
-const Footer = require('./models/footer.model');
-const Carausel = require('./models/carausels.model');
-const AboutUs = require('./models/aboutus.model');
 
 const pushDataToAllModels = async (data) => {
   try {

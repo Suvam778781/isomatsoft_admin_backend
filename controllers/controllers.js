@@ -91,7 +91,7 @@ const GetConditionalData = async (req, res) => {
 
   const UpdateConditionalData = async (req, res) => {
     try {
-      const { section, data } = req.body; // Get section and data from the request body
+      const { section, data, action } = req.body; // Get section, data, and action from the request body
   
       if (!section || !data) {
         return res.status(400).json({
@@ -99,21 +99,50 @@ const GetConditionalData = async (req, res) => {
           message: 'Section and data are required.'
         });
       }
-  const id=data._id;
-  delete data._id;
+  
+      const id = data._id;
+  
+      // Handle delete action
+      if (action === 'delete') {
+        switch (section) {
+          case 'hero_section':
+            await HeroSection.deleteOne({ _id: id });
+            break;
+          case 'carausel':
+            await Carausel.deleteOne({ _id: id });
+            break;
+          case 'aboutus':
+            await AboutUs.deleteOne({ _id: id });
+            break;
+          default:
+            return res.status(400).json({
+              success: false,
+              message: 'Invalid section for deletion.'
+            });
+        }
+  
+        return res.status(200).json({
+          success: true,
+          message: `Data for section ${section} with ID ${id} deleted successfully`
+        });
+      }
+  
+      // Delete the _id field from data before updating
+      delete data._id;
+  
       // Update the specified section based on the section key
       switch (section) {
         case 'header':
           await Header.updateOne({}, data, { upsert: true });
           break;
         case 'hero_section':
-          await HeroSection.updateOne({_id:id}, data, { upsert: true });
+          await HeroSection.updateOne({ _id: id }, data, { upsert: true });
           break;
         case 'footer':
           await Footer.updateOne({}, data, { upsert: true });
           break;
         case 'carausel':
-          await Carausel.updateOne({_id:id}, data, { upsert: true });
+          await Carausel.updateOne({ _id: id }, data, { upsert: true });
           break;
         case 'aboutus':
           await AboutUs.updateOne({}, data, { upsert: true });
@@ -137,6 +166,7 @@ const GetConditionalData = async (req, res) => {
       });
     }
   };
+  
 
 
   const imageLink=async(req,res)=>{

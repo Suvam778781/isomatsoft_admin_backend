@@ -28,7 +28,7 @@ server.post('/api/updateData', UpdateConditionalData); // Route to update data b
 server.post("/api/get-image-url",upload.single('post_img'),get_image_link)
 
 // Start the server
-const PORT = process.env.PORT || 8081;
+const PORT = process.env.PORT || 8091;
 server.listen(PORT, async (error) => {
     if (error) {
       console.log(error);
@@ -150,4 +150,3 @@ const dummyData = {
   
   // Insert the dummy data when the server starts
   // insertDummyData();
-  

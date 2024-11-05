@@ -37,6 +37,17 @@ const heroSchema = new mongoose.Schema({
       },
     ],
   },
+
+  sections: {
+    type: Array,
+    default: [
+      {
+        title: "Our Turnkey Solution",
+        description:"Our Turnkey online casino is a platform development service designed to be modular and scalable. It provides a complete technical solution, along with B2B support and account management. With this platform, you can efficiently handle day-to-day casino operations while seamlessly expanding your feature set through our flexible and scalable API architecture.",
+        image:"https://isomatsoft.com/assets/turnkey-DCwhcuqE.webp"
+      }
+    ],
+  },
 });
 
 const HeroSection = mongoose.model("HeroSection", heroSchema);

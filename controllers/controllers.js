@@ -1,5 +1,6 @@
 const AboutUs = require("../models/aboutus.model");
 const Carausel = require("../models/carausels.model");
+const ContactResponseModel = require("../models/contactresponse.model");
 const Footer = require("../models/footer.model");
 const Header = require("../models/header.model");
 const HeroSection = require("../models/hero.model");
@@ -60,6 +61,9 @@ const GetConditionalData = async (req, res) => {
         case 'aboutus':
           data = await AboutUs.find();
           break;
+        case 'contact_request':
+          data = await ContactResponseModel.find();
+          break;
         default:
           return res.status(400).json({
             success: false,
@@ -87,9 +91,7 @@ const GetConditionalData = async (req, res) => {
     }
   };
 
-
-
-  const UpdateConditionalData = async (req, res) => {
+const UpdateConditionalData = async (req, res) => {
     try {
       const { section, data, action } = req.body; // Get section, data, and action from the request body
   
@@ -147,6 +149,9 @@ const GetConditionalData = async (req, res) => {
         case 'aboutus':
           await AboutUs.updateOne({}, data, { upsert: true });
           break;
+        case 'contact_request':
+          await ContactResponseModel.create(data);
+          break;          
         default:
           return res.status(400).json({
             success: false,
@@ -166,8 +171,6 @@ const GetConditionalData = async (req, res) => {
       });
     }
   };
-  
-
 
   const imageLink=async(req,res)=>{
     
@@ -194,7 +197,6 @@ const GetConditionalData = async (req, res) => {
     }
   }
   
-
   const get_image_link = async (req, res) => {
     try {
       const post_img = await imageLink(req, res);

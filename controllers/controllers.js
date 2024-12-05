@@ -131,7 +131,6 @@ const UpdateConditionalData = async (req, res) => {
   
       // Delete the _id field from data before updating
       delete data._id;
-  
       // Update the specified section based on the section key
       switch (section) {
         case 'header':
@@ -143,9 +142,15 @@ const UpdateConditionalData = async (req, res) => {
         case 'footer':
           await Footer.updateOne({}, data, { upsert: true });
           break;
-        case 'carausel':
-          await Carausel.updateOne({ _id: id }, data, { upsert: true });
-          break;
+          case 'carausel':
+            if (!id) {
+              // Create a new carousel entry if no ID is provided
+              await Carausel.create(data);
+            } else {
+              // Update the existing carousel entry if ID is provided
+              await Carausel.updateOne({ _id: id }, data, { upsert: true });
+            }
+            break;          
         case 'aboutus':
           await AboutUs.updateOne({}, data, { upsert: true });
           break;

@@ -26,6 +26,17 @@ const carauselSchema = new mongoose.Schema({
       type: String, // Description of the site or section
       required: true,
     },
+    priority: {
+      type: Number, // Priority of the carousel item
+      default: 0, // Default priority if not provided
+      required: true, // Ensures that priority is always present
+      min: 0, // Priority cannot be negative
+      max: 10, // Optionally limit priority to a max value, e.g., 10
+    },
+  });
+  carauselSchema.pre('find', function(next) {
+    this.sort({ priority: 1 });  // Sort in ascending order by priority (use -1 for descending)
+    next();
   });
   
   const Carausel = mongoose.model('carausel', carauselSchema);
